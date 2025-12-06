@@ -29,7 +29,7 @@ export interface CompanyRelationship {
 export async function getStrongestRelationships(): Promise<
   CompanyRelationship[]
 > {
-  const rows = await getConnectionsForCompanies();
+  const connections = await getConnectionsForCompanies();
 
   // Group by company, then by partner with counts
   const companyPartnerCounts = new Map<string, Map<string, number>>();
@@ -37,11 +37,11 @@ export async function getStrongestRelationships(): Promise<
   // Track all companies (even those with no connections)
   const allCompanies = new Set<string>();
 
-  for (const row of rows) {
-    const companyName = row.companies.name;
+  for (const connection of connections) {
+    const companyName = connection.companies.name;
     allCompanies.add(companyName);
 
-    const partnerName = row.partners?.name;
+    const partnerName = connection.partners?.name;
     if (!partnerName) continue;
 
     if (!companyPartnerCounts.has(companyName)) {

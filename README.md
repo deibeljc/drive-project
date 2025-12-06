@@ -6,7 +6,15 @@ Track partner-company relationships through connection events.
 
 ```bash
 bun install
-bun cli input.txt
+bun cli process input.txt
+```
+
+### CLI Commands
+
+```bash
+bun cli generate
+bun cli process input.txt
+bun cli create <type> <args> ...
 ```
 
 ## Architecture
