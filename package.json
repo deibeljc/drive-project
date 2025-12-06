@@ -11,7 +11,10 @@
   },
   "scripts": {
     "db:push": "bun run drizzle-kit push",
-    "cli": "bun run src/cli/index.ts"
+    "db:push:test": "DB_FILE_NAME=file:local.test.db bun run drizzle-kit push",
+    "cli": "bun run src/cli/index.ts",
+    "test": "bun run db:push:test && DB_FILE_NAME=file:local.test.db bun test",
+    "test:coverage": "bun run db:push:test && DB_FILE_NAME=file:local.test.db bun test --coverage"
   },
   "peerDependencies": {
     "typescript": "^5"

@@ -1,0 +1,10 @@
+[test]
+coverage = true
+coverageDir = "coverage"
+coverageReporter = ["text", "lcov"]
+
+# Only include src files in coverage, exclude tests and node_modules
+coverageSkipTestFiles = true
+
+[test.env]
+DB_FILE_NAME = "file:local.test.db"

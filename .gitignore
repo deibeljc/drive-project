@@ -38,3 +38,6 @@ src/jobs/data
 
 # Logs
 *.log
+
+# Test database
+*.db
