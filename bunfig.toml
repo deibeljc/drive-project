@@ -7,4 +7,4 @@ coverageReporter = ["text", "lcov"]
 coverageSkipTestFiles = true
 
 [test.env]
-DB_FILE_NAME = "file:local.test.db"
+DB_FILE_NAME = "local.test.db"
