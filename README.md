@@ -38,7 +38,7 @@ bun test
 
 ## Approach & Design Decisions
 
-I approached this problem by separating the main functions into layers that could easily hook into a more robust application. The CLI acts as a thin orchestration layer, while the core parsing and query logic live in reusable services. This structure allows for easy monorepo expansion. Adding an API layer or frontend would just mean importing the same services the CLI uses.
+I approached this problem by separating the main functions into layers that could easily hook into a more robust application. The CLI acts as a thin orchestration layer, while the core parsing and query logic live in reusable services. This isomorphic structure allows for easy monorepo expansion. Adding an API layer would just mean importing the same services the CLI uses and the frontend could easily use a shared TRPC-esque client.
 
 **Why SQLite + Drizzle?** For a toy problem, in-memory data structures would suffice. But given the prompt to "treat this like a production product," I opted for persistence. SQLite keeps things simple (no server, single file) while Drizzle provides type-safe queries and easy migration paths if the schema evolves. It also demonstrates how I'd structure a real system where contacts accumulate over time.
 
