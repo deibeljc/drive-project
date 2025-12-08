@@ -2,6 +2,10 @@ import { db } from "@db/client";
 import { Company, Connection, Employee, Partner } from "@db/schema";
 import { eq } from "drizzle-orm";
 
+export type CompanyConnection = Awaited<
+  ReturnType<typeof getConnectionsForCompanies>
+>;
+
 /**
  * Get all connections for all companies.
  */
@@ -16,19 +20,37 @@ export async function getConnectionsForCompanies() {
   return companiesWithConnections;
 }
 
-export interface CompanyRelationship {
-  companyName: string;
-  partnerName: string | null;
-  strength: number;
+export type GroupedConnections = Awaited<
+  ReturnType<typeof getConnectionsGroupedByCompany>
+>;
+
+export async function getConnectionsGroupedByCompany() {
+  const rows = await getConnectionsForCompanies();
+
+  const grouped: Record<number, CompanyConnection[number][]> = {};
+  for (const row of rows) {
+    (grouped[row.companies.id] ??= []).push(row);
+  }
+
+  return Object.values(grouped).map((rows) => ({
+    company: rows[0]!.companies,
+    connections: rows.flatMap((r) =>
+      r.connections
+        ? [{ ...r.connections, employee: r.employees, partner: r.partners }]
+        : []
+    ),
+  }));
 }
+
+export type CompanyRelationship = Awaited<
+  ReturnType<typeof getStrongestRelationships>
+>;
 
 /**
  * Get the strongest partner relationship for each company.
  * Returns companies sorted alphabetically with the partner who has the most contacts.
  */
-export async function getStrongestRelationships(): Promise<
-  CompanyRelationship[]
-> {
+export async function getStrongestRelationships() {
   const connections = await getConnectionsForCompanies();
 
   // Group by company, then by partner with counts
@@ -53,7 +75,7 @@ export async function getStrongestRelationships(): Promise<
   }
 
   // Build result with strongest partner per company
-  const results: CompanyRelationship[] = [];
+  const results = [];
 
   for (const companyName of allCompanies) {
     const partnerCounts = companyPartnerCounts.get(companyName);
@@ -83,21 +105,4 @@ export async function getStrongestRelationships(): Promise<
 
   // Sort alphabetically by company name
   return results.sort((a, b) => a.companyName.localeCompare(b.companyName));
-}
-
-/**
- * Format relationships as the spec requires:
- * CompanyName: PartnerName (N)
- * CompanyName: No current relationship
- */
-export function formatRelationships(
-  relationships: CompanyRelationship[]
-): string {
-  return relationships
-    .map((r) =>
-      r.partnerName
-        ? `${r.companyName}: ${r.partnerName} (${r.strength})`
-        : `${r.companyName}: No current relationship`
-    )
-    .join("\n");
 }

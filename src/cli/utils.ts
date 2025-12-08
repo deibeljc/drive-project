@@ -1,3 +1,9 @@
+import type {
+  CompanyConnection,
+  CompanyRelationship,
+  GroupedConnections,
+} from "src/api/services/connections";
+
 const FIRST_NAMES = [
   "Alex",
   "Jamie",
@@ -109,4 +115,35 @@ export function generateSampleData(options: {
   }
 
   return lines.join("\n");
+}
+
+/**
+ * Format relationships as the spec requires:
+ * CompanyName: PartnerName (N)
+ * CompanyName: No current relationship
+ */
+export function formatRelationships(
+  relationships: CompanyRelationship
+): string {
+  return relationships
+    .map((r) =>
+      r.partnerName
+        ? `${r.companyName}: ${r.partnerName} (${r.strength})`
+        : `${r.companyName}: No current relationship`
+    )
+    .join("\n");
+}
+
+/**
+ * Formats grouped connections by company into a string.
+ * TODO: Return a nice tree structure of connections by company and partner
+ * @param connections Grouped connections by company
+ * @returns String of company name and number of total connections
+ */
+export function formatConnections(connections: GroupedConnections): string {
+  return connections
+    .map((c) => {
+      return `${c.company.name}: ${c.connections.length} connections`;
+    })
+    .join("\n");
 }

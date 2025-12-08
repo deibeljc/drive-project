@@ -1,9 +1,7 @@
 import { Command, Option } from "clipanion";
 import { parseAndStoreInputLine, ParseError } from "@core/parsers";
-import {
-  getStrongestRelationships,
-  formatRelationships,
-} from "../../api/services/connections";
+import { getStrongestRelationships } from "../../api/services/connections";
+import { formatRelationships } from "../utils";
 
 export class ProcessCommand extends Command {
   static override paths = [[`process`]];
@@ -38,8 +36,10 @@ export class ProcessCommand extends Command {
       }
     }
 
-    const relationships = await getStrongestRelationships();
-    this.context.stdout.write(formatRelationships(relationships) + "\n");
+    const strongestRelationships = await getStrongestRelationships();
+    this.context.stdout.write(
+      formatRelationships(strongestRelationships) + "\n"
+    );
     return 0;
   }
 }
