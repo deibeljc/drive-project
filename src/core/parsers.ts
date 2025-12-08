@@ -17,6 +17,10 @@ export class ParseError extends Error {
   }
 }
 
+function normalizeString(str: string): string {
+  return str.trim().toLowerCase();
+}
+
 export async function parsePartner(
   args: string[],
   lineNumber?: number
@@ -122,7 +126,8 @@ export async function parseAndStoreInputLine(
 
   const parts = trimmed.split(" ");
   const command = parts[0];
-  const args = parts.slice(1);
+  // Normalize the arguments to ensure case-insensitivity
+  const args = parts.slice(1).map(normalizeString);
 
   // Validate command
   if (!VALID_COMMANDS.includes(command as Command)) {
