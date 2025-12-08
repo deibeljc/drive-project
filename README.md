@@ -40,7 +40,7 @@ bun test
 
 I approached this problem by separating the main functions into layers that could easily hook into a more robust application. The CLI acts as a thin orchestration layer, while the core parsing and query logic live in reusable services. This isomorphic structure allows for easy monorepo expansion. Adding an API layer would just mean importing the same services the CLI uses and the frontend could easily use a shared TRPC-esque client.
 
-**Why `SQLite & Drizzle`?** For a toy problem, in-memory data structures would suffice. But given I was asked to "treat this like a production product," I opted for persistence. SQLite keeps things simple to run (no server, single file) while Drizzle provides type-safe queries and easy migration paths if the schema evolves. It also demonstrates how I'd structure a real system where contacts accumulate over time.
+**Why `SQLite & Drizzle`?** For a toy problem, in-memory data structures would suffice. But given I was asked to "treat this like a production product," I opted for persistence. SQLite keeps things simple to run (no server, single file) while Drizzle provides type-safe queries and easy migration paths if the schema evolves. It also demonstrates how I'd structure a real system where contacts accumulate over time. I would swap to a more robust database engine like Postgres in a production environment.
 
 **Why `ts-pattern`?** Pattern matching makes the command dispatch exhaustive at compile time—if I add a new command type, TypeScript will force me to handle it. This prevents silent failures from forgotten cases.
 
