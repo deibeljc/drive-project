@@ -52,8 +52,7 @@ I approached this problem by separating the main functions into layers that coul
 
 ### Assumptions & Edge Cases
 
-- **Input is well-formed:** Per the spec, I assume valid formatting. I do validate argument counts, entity existence, and contact types—but I don't handle malformed lines (e.g., missing spaces).
-- **Arguments are normalized:** All arguments are lowercased and trimmed to ensure case sensitivity is accounted for and errant duplicates are not made.
+- **Input is well-formed:** Per the spec, I assume valid formatting. I do validate argument counts, entity existence, and contact types. I normalize arguments to ensure case-insensitivity and trim whitespace but I don't handle malformed lines (e.g., missing spaces).
 - **Employee names are globally unique:** As stated in the spec, no collision handling needed.
 - **Tie-breaking:** If two partners have equal contact strength with a company, the first one encountered wins. This is deterministic within a single run but not explicitly alphabetical.
 - **Database persists between runs:** Running `process` twice on the same file will accumulate contacts. Companies, Partners, and Employees are unique by name and therefore will not be duplicated. Clear `local.db` for a fresh state.
